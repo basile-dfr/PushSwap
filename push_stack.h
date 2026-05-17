@@ -28,6 +28,11 @@ typedef struct s_bench
 	int	rrb;
 	int	rrr;
 	int	total;
+	int	printbench;
+	int	simple;
+	int	medium;
+	int	complex;
+	int	adaptative;
 }	t_bench;
 
 typedef struct s_stack
@@ -58,9 +63,12 @@ void		rrr(t_stack **a, t_stack **b, t_bench *bench);
 //parsing functions
 int			ft_atoi(const char *nptr);
 int			fill_a(t_stack **a, char **vs, int count);
+int			strncmp(const char *str1, const char *str2, size_t n);
+int			handle_flag(char **argv, int count, t_bench *bench);
+size_t		strlen(const char *str);
 
 //sorting algorithms
-void	selection_sort(t_stack **a, t_stack **b, t_bench *bench);
+void		selection_sort(t_stack **a, t_stack **b, t_bench *bench);
 
 //bench functions
 float		compute_disorder(t_stack *a);
