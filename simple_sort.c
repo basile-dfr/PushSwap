@@ -38,7 +38,7 @@ static int	stack_maxi(t_stack *stack)
 	return (maxi);
 }
 
-void	selection_sort(t_stack **a, t_stack **b)
+void	selection_sort(t_stack **a, t_stack **b, t_bench *bench)
 {
 	int	maxi;
 
@@ -47,9 +47,9 @@ void	selection_sort(t_stack **a, t_stack **b)
 		maxi = stack_maxi(*a);
 		while (maxi)
 		{
-			ra(a);
+			ra(a, bench);
 			maxi--;
 		}
-		pb(b, a);
+		pb(b, a, bench);
 	}
 }
