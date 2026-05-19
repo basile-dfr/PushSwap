@@ -38,18 +38,40 @@ static int	stack_maxi(t_stack *stack)
 	return (maxi);
 }
 
-void	selection_sort(t_stack **a, t_stack **b, t_bench *bench)
+int	stack_len(t_stack *stack)
+{
+	int	i;
+
+	i = 0;
+	while (stack)
+	{
+		i++;
+		stack = stack->next;
+	}
+	return (i);
+}
+
+void	selection_sort(t_bench *bench)
 {
 	int	maxi;
+	int	len;
 
-	while (*a)
+	while (bench->a)
 	{
-		maxi = stack_maxi(*a);
+		maxi = stack_maxi(bench->a);
+		len = stack_len(bench->a);
+		if (maxi - 1 < len / 2)
+			len = 0;
+		else
+			maxi = len - maxi;
 		while (maxi)
 		{
-			ra(a, bench);
+			if (!len)
+				ra(bench);
+			else
+				rra(bench);
 			maxi--;
 		}
-		pb(b, a, bench);
+		pb(bench);
 	}
 }

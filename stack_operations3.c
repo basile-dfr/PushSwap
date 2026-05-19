@@ -29,27 +29,30 @@ void	stack_rrot(t_stack **stack)
 	*stack = rot;
 }
 
-void	rra(t_stack **a, t_bench *bench)
+void	rra(t_bench *bench)
 {
-	stack_rrot(a);
-	write(1, "rra\n", 4);
-	bench->rra++;
-	bench->total++;
+	stack_rrot(&(bench->a));
+	//if (!bench->printbench)
+	//	write(1, "rra\n", 4);
+	bench->totals[9]++;
+	bench->totals[0]++;
 }
 
-void	rrb(t_stack **b, t_bench *bench)
+void	rrb(t_bench *bench)
 {
-	stack_rrot(b);
-	write(1, "rrb\n", 4);
-	bench->rrb++;
-	bench->total++;
+	stack_rrot(&(bench->b));
+	//if (!bench->printbench)
+	//	write(1, "rrb\n", 4);
+	bench->totals[10]++;
+	bench->totals[0]++;
 }
 
-void	rrr(t_stack **a, t_stack **b, t_bench *bench)
+void	rrr(t_bench *bench)
 {
-	stack_rrot(b);
-	stack_rrot(a);
-	write(1, "rrr\n", 4);
-	bench->rrr++;
-	bench->total++;
+	stack_rrot(&(bench->a));
+	stack_rrot(&(bench->b));
+	//if (!bench->printbench)
+	//	write(1, "rrr\n", 4);
+	bench->totals[11]++;
+	bench->totals[0]++;
 }

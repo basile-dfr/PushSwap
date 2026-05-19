@@ -21,7 +21,7 @@ float	compute_disorder(t_stack *a)
 	i = a;
 	mistakes = 0;
 	total_pairs = 0;
-	while(i)
+	while (i)
 	{
 		j = i->next;
 		while (j)

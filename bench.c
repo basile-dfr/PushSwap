@@ -43,60 +43,55 @@ static void	ft_putfloat_fd(float n, int fd)
 	ft_putnbr_fd(decimal, fd);
 }
 
-static void	ft_putstr_fd(char *str, int fd)
+static void	ft_putstr_fd(char *str)
 {
 	int	i;
 
 	i = 0;
 	while (str[i])
 	{
-		write(fd, &str[i], 1);
+		write(2, &str[i], 1);
 		i++;
 	}
 }
 
-static void	print_bench2(t_bench *bench)
+static void	print_bench_total(t_bench *bench, int ti)
 {
-	write(2, "[bench] ra: ", 12);
-	ft_putnbr_fd(bench->ra, 2);
-	write(2, " rb: ", 5);
-	ft_putnbr_fd(bench->rb, 2);
-	write(2, " rr: ", 5);
-	ft_putnbr_fd(bench->rr, 2);
-	write(2, " rra: ", 6);
-	ft_putnbr_fd(bench->rra, 2);
-	write(2, " rrb: ", 6);
-	ft_putnbr_fd(bench->rrb, 2);
-	write(2, " rrr: ", 6);
-	ft_putnbr_fd(bench->rrr, 2);
-	write(2, "\n", 1);
+	char	*names;
+
+	names = "sa sb ss pa pb ra rb rr rrarrbrrr";
+	write(2, " ", 1);
+	if (ti)
+		write(2, names + (ti - 1) * 3, 2 + (ti / 9));
+	else
+		write(2, "total_ops", 9);
+	write(2, ": ", 2);
+	ft_putnbr_fd(bench->totals[ti], 2);
 }
 
-void	print_bench(t_bench *bench, float disorder, char *strategy)
+void	print_bench(t_bench *bench, float disorder)
 {
-	//disorder
+	int	ti;
+
+	ti = 0;
 	write(2, "[bench] disorder: ", 18);
 	ft_putfloat_fd(disorder * 100, 2);
 	write(2, "%\n", 2);
-	//strategy
 	write(2, "[bench] strategy: ", 18);
-	ft_putstr_fd(strategy, 2);
+	if (bench->strategy == 's')
+		ft_putstr_fd("Simple / O(n²)");
+	else if (bench->strategy == 'm')
+		ft_putstr_fd("Medium / O(n√n)");
+	else if (bench->strategy == 'c')
+		ft_putstr_fd("Complex / O(nlogn)");
+	write(2, "\n[bench]", 8);
+	print_bench_total(bench, ti);
+	write(2, "\n[bench]", 8);
+	while (ti++ < 5)
+		print_bench_total(bench, ti);
+	ti--;
+	write(2, "\n[bench]", 8);
+	while (ti++ < 11)
+		print_bench_total(bench, ti);
 	write(2, "\n", 1);
-	//total ops
-	write(2, "[bench] total_ops: ", 19);
-	ft_putnbr_fd(bench->total, 2);
-	write(2, "\n", 1);
-	//nb de chaque op
-	write(2, "[bench] sa: ", 12);
-	ft_putnbr_fd(bench->sa, 2);
-	write(2, " sb: ", 5);
-	ft_putnbr_fd(bench->sb, 2);
-	write(2, " ss: ", 5);
-	ft_putnbr_fd(bench->ss, 2);
-	write(2, " pa: ", 5);
-	ft_putnbr_fd(bench->pa, 2);
-	write(2, " pb: ", 5);
-	ft_putnbr_fd(bench->pb, 2);
-	write(2, "\n", 1);
-	print_bench2(bench);
 }
