@@ -24,76 +24,78 @@ static int	ftsqrt(t_stack *stack)
 	return (i - 1);
 }
 
-static int	find_chunk_pos(t_stack *stack, int min, int max, int *from_top, int *from_bot)
+static int	find_chunk_pos(t_stack *stack, int min, int max, int *first_pos, int *last_pos)
 {
 	int	pos;
 
 	pos = 0;
-	*from_top = -1;
-	*from_bot = -1;
+	*first_pos = -1;
+	*last_pos = -1;
 	while (stack)
 	{
-		if (stack->value >= min && stack->value <= max)
+		if (stack->value >= min && stack->value <= max) // si compris dans la range
 		{
-			if (*from_top == -1)
-				*from_top = pos;
-			*from_bot = pos;
+			if (*first_pos == -1) // donne la pos du permier passage a first_pos
+				*first_pos = pos;
+			*last_pos = pos; // sinon enregirste le dernier passage
 		}
 		pos++;
 		stack = stack->next;
 	}
-	return (*from_top != -1);
+	return (*first_pos != -1); // return 1 si trouvé dans la range sinn 0
 }
 
 static void	push_chunktob(t_bench *bench, int min, int max)
 {
-	int	from_top;
-	int	from_bot;
+	int	first_pos;
+	int	last_pos;
 	int	size;
 
-	size = size_stack(bench->a);
-	while (find_chunk_pos(bench->a, min, max, &from_top, &from_bot))
+
+	while (find_chunk_pos(bench->a, min, max, &first_pos, &last_pos)) // tant que ya dans a une valeur de la range
 	{
-		if (from_top <= size - from_bot)
-			while (from_top--)
+		size = size_stack(bench->a);
+		if (first_pos <= size - last_pos) // ra si c'est plus court par le haut 
+			while (first_pos--)
 				ra(bench);
 		else
 		{
-			from_bot = size - from_bot;
-			while (from_bot--)
+			last_pos = size - last_pos; // rra si c'est plus court par le bas 
+			while (last_pos--)
 				rra(bench);
 		}
-		pb(bench);
-		size--;
+		pb(bench); // push dans b
 	}
 }
 
 static void pull_chunktoa(t_bench *bench, int min, int max)
 {
-    int from_top;
-    int from_bot;
     int size;
-    int cur_max;
+    int value_max;
+	int max_pos;
+	int	last_pos; //sert a rien juste requis dans find chunk pos
+	(void)last_pos; //sert a rien juste requis dans find chunk pos
 
-    while (find_chunk_pos(bench->b, min, max, &from_top, &from_bot))
+    while (find_chunk_pos(bench->b, min, max, &max_pos, &last_pos))  //tant que ya dans b une valeur de la range
     {
         size = size_stack(bench->b);
-        cur_max = find_max_in_range(bench->b, min, max);
-        find_pos_value(bench->b, cur_max, &from_top);
-        if (from_top <= size - from_top)
-            while (from_top--)
+        value_max = find_max_in_range(bench->b, min, max);  //trouve la plus grande valeur
+        find_pos_value(bench->b, value_max, &max_pos); // trouve sa position
+	//	printf("%d\n", max_pos);
+        if (max_pos <= size - max_pos) // si c'est plus opti par le haut rb
+            while (max_pos--)
                 rb(bench);
         else
         {
-            from_top = size - from_top;
-            while (from_top--)
+            max_pos = size - max_pos; // si c'est plus opti par le bas rrb
+            while (max_pos--)
                 rrb(bench);
         }
-        pa(bench);
+        pa(bench); // push le haut dans a
     }
 }
 
-int	medium_sort(t_bench *bench)
+void	medium_sort(t_bench *bench)
 {
 	int	nb_chunks;
 	int	range;
@@ -102,7 +104,7 @@ int	medium_sort(t_bench *bench)
 	int	i;
 
 	i = 0;
-	nb_chunks = ftsqrt(bench->a);
+	nb_chunks = ftsqrt(bench->a); // racine carre de nb element
 	min = find_min(bench->a);
 	max = find_max(bench->a);
 	range = (max - min + nb_chunks) / nb_chunks;
@@ -117,6 +119,4 @@ int	medium_sort(t_bench *bench)
 		pull_chunktoa(bench, min + i * range, min + (i + 1) * range - 1);
 		i--;
 	}
-	return (0);
 }
-
