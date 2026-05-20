@@ -12,47 +12,24 @@
 
 #include "push_stack.h"
 
+int	median(t_stack *stack, t_stack *depth);
 
-
-int	stack_len(t_stack *stack);
-
-static int	nth_value(t_stack *stack, int n)
+static void	push_over2(t_bench *bench, t_stack **depth, int k, int p)
 {
-	int	i;
+	int	rollback;
 
-	i = 0;
-	if (!stack)
-		return (0);
-	while (stack->next && i < n)
+	rollback = (k + p + 1) != (stack_len(bench->a) + stack_len(bench->b));
+	free(stack_removetop(depth));
+	stack_addtop(depth, (stack_new(k)));
+	stack_addtop(depth, (stack_new(1)));
+	stack_addtop(depth, (stack_new(p)));
+	while (k && rollback)
 	{
-		stack = stack->next;
-		i++;
+		rra(bench);
+		k--;
 	}
-	return (stack->value);
-}
-
-static int	median(t_stack *stack, t_stack *depth)
-{
-	int	i;
-	int	j;
-	int	h;
-
-	i = 0;
-	while (i < depth->value)
-	{
-		j = 0;
-		h = 0;
-		while (j < depth->value)
-		{
-			if (nth_value(stack, i) > nth_value(stack, j))
-				h++;
-			j++;
-		}
-		if (h == depth->value / 2)
-			return (nth_value(stack, i));
-		i++;
-	}
-	return (stack->value);
+	rrb(bench);
+	pa(bench);
 }
 
 static void	push_over(t_bench *bench, int med, t_stack **depth)
@@ -64,12 +41,12 @@ static void	push_over(t_bench *bench, int med, t_stack **depth)
 	kept = 0;
 	while ((*depth)->value)
 	{
-		if (bench->a->value > med)
+		if (bench->a->value < med)
 		{
 			pushed++;
 			pb(bench);
 		}
-		else if (bench->a->value < med)
+		else if (bench->a->value > med)
 		{
 			kept++;
 			ra(bench);
@@ -81,22 +58,12 @@ static void	push_over(t_bench *bench, int med, t_stack **depth)
 		}
 		(*depth)->value--;
 	}
-	stack_removetop(depth);
-	stack_addtop(depth, (stack_new(kept)));
-	stack_addtop(depth, (stack_new(1)));
-	stack_addtop(depth, (stack_new(pushed)));
-	while (kept)
-	{
-		rra(bench);
-		kept--;
-	}
-	rrb(bench);
-	pa(bench);
+	push_over2(bench, depth, kept, pushed);
 }
 
 static void	push_back(t_bench *bench, t_stack **depth)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < (*depth)->value)
@@ -111,32 +78,28 @@ static void	final_push(t_bench *bench, t_stack **depth)
 	while (*depth && (*depth)->value <= 2)
 	{
 		if ((*depth)->value == 1)
-			pb(bench);
+			ra(bench);
 		else if ((*depth)->value == 2)
 		{
-			if (bench->a->value < bench->a->next->value)
+			if (bench->a->value > bench->a->next->value)
 				sa(bench);
-			pb(bench);
-			pb(bench);
+			ra(bench);
+			ra(bench);
 		}
-		stack_removetop(depth);
+		free(stack_removetop(depth));
 	}
 }
 
-void	print_stack(t_stack *stack);
-//void	print_stacks(t_stack *a, t_stack *b);
 void	quicksort(t_bench *bench)
 {
 	t_stack	*depth;
 
 	depth = 0;
 	stack_addtop(&depth, (stack_new(stack_len(bench->a))));
-	while (bench->a)
+	while (depth)
 	{
-		//printf("median = %d\n", med);
 		push_over(bench, median(bench->a, depth), &depth);
 		push_back(bench, &depth);
-		print_stack(depth);
 		final_push(bench, &depth);
 	}
 }

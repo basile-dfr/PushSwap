@@ -31,8 +31,8 @@ void	stack_rot(t_stack **stack)
 void	ra(t_bench *bench)
 {
 	stack_rot(&(bench->a));
-	//if (!bench->printbench)
-	//	write(1, "ra\n", 3);
+	if (!bench->printbench)
+		write(1, "ra\n", 3);
 	bench->totals[6]++;
 	bench->totals[0]++;
 }
@@ -40,8 +40,8 @@ void	ra(t_bench *bench)
 void	rb(t_bench *bench)
 {
 	stack_rot(&(bench->b));
-	//if (!bench->printbench)
-	//	write(1, "rb\n", 3);
+	if (!bench->printbench)
+		write(1, "rb\n", 3);
 	bench->totals[7]++;
 	bench->totals[0]++;
 }
@@ -50,8 +50,8 @@ void	rr(t_bench *bench)
 {
 	stack_rot(&(bench->a));
 	stack_rot(&(bench->b));
-	//if (!bench->printbench)
-	//	write(1, "rr\n", 3);
+	if (!bench->printbench)
+		write(1, "rr\n", 3);
 	bench->totals[8]++;
 	bench->totals[0]++;
 }

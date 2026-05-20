@@ -79,16 +79,23 @@ int	main(int argc, char **argv)
 	if (handle_flag(argv, &i, &bench))
 		return (write(1, "Error\n", 6) == 0);
 	if (fill_a(&(bench.a), argv + i, argc - i))
+	{
+		stack_free(bench.a);
+		stack_free(bench.b);
 		return (write(1, "Error\n", 6) == 0);
+	}
 	disorder = compute_disorder(bench.a);
-	print_stacks(bench.a, bench.b);
 	if (bench.strategy == 's')
 		selection_sort(&bench);
+	else if (bench.strategy == 'm')
+		medium_sort(&bench);
 	else if (bench.strategy == 'c')
 		quicksort(&bench);
+	else
+		i = 0;
 	if (bench.printbench)
 		print_bench(&bench, disorder);
 	print_stacks(bench.a, bench.b);
-	//printf("%d\n", find_min(bench.b));
-//	printf("%d\n", find_max(bench.b));
+	stack_free(bench.a);
+	stack_free(bench.b);
 }

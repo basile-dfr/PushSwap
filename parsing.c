@@ -12,6 +12,8 @@
 
 #include "push_stack.h"
 
+int	has_duplicates(t_stack *stack);
+
 int	ft_atoi(const char *nptr)
 {
 	int	neg;
@@ -72,5 +74,7 @@ int	fill_a(t_stack **a, char **vs, int count)
 		stack_addtop(a, stack_new(value));
 		i--;
 	}
+	if (has_duplicates(*a))
+		return (1);
 	return (0);
 }

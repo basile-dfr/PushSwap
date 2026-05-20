@@ -57,9 +57,11 @@ void	selection_sort(t_bench *bench)
 	int	len;
 
 	while (bench->a)
+		pb(bench);
+	while (bench->b)
 	{
-		maxi = stack_maxi(bench->a);
-		len = stack_len(bench->a);
+		maxi = stack_maxi(bench->b);
+		len = stack_len(bench->b);
 		if (maxi - 1 < len / 2)
 			len = 0;
 		else
@@ -67,11 +69,11 @@ void	selection_sort(t_bench *bench)
 		while (maxi)
 		{
 			if (!len)
-				ra(bench);
+				rb(bench);
 			else
-				rra(bench);
+				rrb(bench);
 			maxi--;
 		}
-		pb(bench);
+		pa(bench);
 	}
 }

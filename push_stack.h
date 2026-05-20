@@ -34,6 +34,13 @@ t_stack		*stack_new(int value);
 void		stack_addtop(t_stack **stack, t_stack *add);
 void		swap(t_stack *stack);
 t_stack		*stack_removetop(t_stack **stack);
+void		stack_free(t_stack *stack);
+int			stack_len(t_stack *stack);
+int			size_stack(t_stack *stack);
+int			find_max(t_stack *stack);
+int			find_min(t_stack *stack);
+int 		find_max_in_range(t_stack *stack, int min, int max);
+void 		find_pos_value(t_stack *stack, int value, int *pos);
 
 // stack operations
 void		sa(t_bench *bench);
@@ -58,7 +65,9 @@ size_t		strlen(const char *str);
 //sorting algorithms
 void		selection_sort(t_bench *bench); //simple
 //medium
-void		quicksort(t_bench *bench); //complex
+int			medium_sort(t_bench *bench); //complex
+//complex 
+void		quicksort(t_bench *bench);
 
 //bench functions
 float		compute_disorder(t_stack *a);

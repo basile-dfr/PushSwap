@@ -17,6 +17,8 @@ t_stack	*stack_new(int value)
 	t_stack	*new;
 
 	new = malloc(sizeof(struct s_stack));
+	if (!new)
+		return (NULL);
 	new->value = value;
 	new->next = NULL;
 	return (new);
@@ -44,6 +46,18 @@ void	swap(t_stack *stack)
 	sw = stack->value;
 	stack->value = stack->next->value;
 	stack->next->value = sw;
+}
+
+void	stack_free(t_stack *stack)
+{
+	t_stack	*nxt;
+
+	while (stack)
+	{
+		nxt = stack->next;
+		free(stack);
+		stack = nxt;
+	}
 }
 
 t_stack	*stack_removetop(t_stack **stack)
